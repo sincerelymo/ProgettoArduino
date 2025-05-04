@@ -25,7 +25,7 @@ Servo cancelloServo;
 // Pin dei segmenti a, b, c, d, e, f, g del display 7 segmenti
 const int pinSegmenti[7] = {A0, A1, A2, A3, 5, 6, 8};
 
-// Mappa cifre 0-9 per display a 7 segmenti (catodo comune)
+// Mappa cifre 0-9 per display a 7 segmenti 
 const byte cifre[10][7] = {
   {1,1,1,1,1,1,0}, // 0
   {0,1,1,0,0,0,0}, // 1
@@ -87,7 +87,8 @@ void setup() {
   lcd.write(45);  // -
   lcd.write(62);  // >
 
-  visualizzaCifra(postiDisponibili); // Mostra il numero iniziale
+  visualizzaCifra(postiDisponibili); 
+  
   digitalWrite(pinLedRosso, HIGH);
   digitalWrite(pinLedVerde, LOW);
 
@@ -104,89 +105,48 @@ void loop() {
       autoRilevataIngresso = true;
       ultimoRilevamentoIngresso = millis();
 
-      if (postiDisponibili > 0) {
-        // Aggiungi un delay di 800 ms prima di alzare il servo motore
-        delay(800);
+              if (postiDisponibili > 0) {
+          delay(800);
+          cancelloServo.write(90);
+          digitalWrite(pinLedVerde, HIGH);
+          digitalWrite(pinLedRosso, LOW);
 
-        // Apri cancello per l'ingresso
-        cancelloServo.write(90);
-        digitalWrite(pinLedVerde, HIGH);
-        digitalWrite(pinLedRosso, LOW);
+          lcd.clear();
+          lcd.write(65);  // A
+          lcd.write(112); // p
+          lcd.write(101); // e
+          lcd.write(114); // r
+          lcd.write(116); // t
+          lcd.write(111); // o
 
-        lcd.clear();
-        lcd.write(65);  // A
-        lcd.write(112); // p
-        lcd.write(101); // e
-        lcd.write(114); // r
-        lcd.write(116); // t
-        lcd.write(111); // o
+          lcd.setCursor(0, 1);
+          lcd.write(80);  // P
+          lcd.write(111); // o
+          lcd.write(115); // s
+          lcd.write(116); // t
+          lcd.write(105); // i
+          lcd.write(32);  // spazio
+          lcd.write(100); // d
+          lcd.write(105); // i
+          lcd.write(115); // s
+          lcd.write(112); // p
+          lcd.write(58);  // :
+          lcd.write(32);  // spazio
+          lcd.write(45);  // -
+          lcd.write(62);  // >
 
-        // Messaggio per "Posti disp: -->"
-        lcd.setCursor(0, 1);
-        lcd.write(80);  // P
-        lcd.write(111); // o
-        lcd.write(115); // s
-        lcd.write(116); // t
-        lcd.write(105); // i
-        lcd.write(32);  // spazio
-        lcd.write(100); // d
-        lcd.write(105); // i
-        lcd.write(115); // s
-        lcd.write(112); // p
-        lcd.write(58);  // :
-        lcd.write(32);  // spazio
-        lcd.write(45);  // -
-        lcd.write(62);  // >
+          // ⬇ Attendi che l'auto si allontani
+          while (misuraDistanza(trigIngresso, echoIngresso) <= 14) {
+            delay(100);
+          }
 
-        delay(3000);
+          cancelloServo.write(0);
+          digitalWrite(pinLedVerde, LOW);
+          digitalWrite(pinLedRosso, HIGH);
 
-        // Chiudi cancello dopo l'ingresso
-        cancelloServo.write(0);
-        digitalWrite(pinLedVerde, LOW);
-        digitalWrite(pinLedRosso, HIGH);
-
-        postiDisponibili--;
-        delay(1000);
-        visualizzaCifra(postiDisponibili);
-        delay(500);
-      } else {
-        // Messaggio "Pieno"
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.write(80);  // P
-        lcd.write(105); // i
-        lcd.write(101); // e
-        lcd.write(110); // n
-        lcd.write(111); // o
-        delay(1500);
-      }
-    }
-  } else if (autoRilevataIngresso && distanzaIngresso > 14) {
-    autoRilevataIngresso = false;
-    // Messaggio "Chiuso"
-    lcd.clear();
-    lcd.write(67);  // C
-    lcd.write(104); // h
-    lcd.write(105); // i
-    lcd.write(117); // u
-    lcd.write(115); // s
-    lcd.write(111); // o
-
-    lcd.setCursor(0, 1);
-    lcd.write(80);  // P
-    lcd.write(111); // o
-    lcd.write(115); // s
-    lcd.write(116); // t
-    lcd.write(105); // i
-    lcd.write(32);  // spazio
-    lcd.write(68);  // D
-    lcd.write(105); // i
-    lcd.write(115); // s
-    lcd.write(112); // p
-    lcd.write(58);  // :
-    lcd.write(32);  // spazio
-    lcd.write(45);  // -
-    lcd.write(62);  // >
+          postiDisponibili--;
+          visualizzaCifra(postiDisponibili);
+        }
   }
 
   // Rilevamento all'uscita (tra 0 cm e 6 cm)
@@ -195,49 +155,50 @@ void loop() {
       autoRilevataUscita = true;
       ultimoRilevamentoUscita = millis();
 
-      if (postiDisponibili < postiMax) {
-        // Aggiungi un delay di 800 ms prima di alzare il servo motore
-        delay(800);
+    if (postiDisponibili < postiMax) {
+          delay(800);
+          cancelloServo.write(90);
+          digitalWrite(pinLedVerde, HIGH);
+          digitalWrite(pinLedRosso, LOW);
 
-        // Apri cancello per l'uscita
-        cancelloServo.write(90);
-        digitalWrite(pinLedVerde, HIGH);
-        digitalWrite(pinLedRosso, LOW);
+          lcd.clear();
+          lcd.write(65);  // A
+          lcd.write(112); // p
+          lcd.write(101); // e
+          lcd.write(114); // r
+          lcd.write(116); // t
+          lcd.write(111); // o
 
-        lcd.clear();
-        lcd.write(65);  // A
-        lcd.write(112); // p
-        lcd.write(101); // e
-        lcd.write(114); // r
-        lcd.write(116); // t
-        lcd.write(111); // o
+          lcd.setCursor(0, 1);
+          lcd.write(80);  // P
+          lcd.write(111); // o
+          lcd.write(115); // s
+          lcd.write(116); // t
+          lcd.write(105); // i
+          lcd.write(32);  // spazio
+          lcd.write(100); // d
+          lcd.write(105); // i
+          lcd.write(115); // s
+          lcd.write(112); // p
+          lcd.write(58);  // :
+          lcd.write(32);  // spazio
+          lcd.write(45);  // -
+          lcd.write(62);  // >
 
-        // Messaggio per "Posti disp: -->"
-        lcd.setCursor(0, 1);
-        lcd.write(80);  // P
-        lcd.write(111); // o
-        lcd.write(115); // s
-        lcd.write(116); // t
-        lcd.write(105); // i
-        lcd.write(32);  // spazio
-        lcd.write(100); // d
-        lcd.write(105); // i
-        lcd.write(115); // s
-        lcd.write(112); // p
-        lcd.write(58);  // :
-        lcd.write(32);  // spazio
+          visualizzaCifra(postiDisponibili);
 
-        visualizzaCifra(postiDisponibili);
+          //  Attendi che l'auto si allontani
+          while (misuraDistanza(trigUscita, echoUscita) <= 6) {
+            delay(100);
+          }
 
-        delay(3000);
+          cancelloServo.write(0);
+          digitalWrite(pinLedVerde, LOW);
+          digitalWrite(pinLedRosso, HIGH);
 
-        // Chiudi cancello dopo l'uscita
-        cancelloServo.write(0);
-        digitalWrite(pinLedVerde, LOW);
-        digitalWrite(pinLedRosso, HIGH);
-
-        postiDisponibili++;
-        delay(500);
+          postiDisponibili++;
+          delay(500);
+        }
       }
     }
   } else if (autoRilevataUscita && distanzaUscita > 6) {
@@ -264,6 +225,8 @@ void loop() {
     lcd.write(112); // p
     lcd.write(58);  // :
     lcd.write(32);  // spazio
+    lcd.write(45);  // -
+    lcd.write(62);  // >
     visualizzaCifra(postiDisponibili); // Mostra la disponibilità
   }
 
